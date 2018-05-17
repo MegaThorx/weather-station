@@ -42,7 +42,7 @@ EPD_HEIGHT = 384
 def main():
     locale.setlocale(locale.LC_ALL, 'de_AT.utf8')
     temp = forecast.get_current_weather()
-    forecast.get_forecast()
+    forecasts = forecast.get_forecast()
     epd = epd7in5.EPD()
     epd.init()
 
@@ -54,8 +54,20 @@ def main():
     draw.rectangle((10, 10, EPD_WIDTH - 10, EPD_HEIGHT - 10), fill=255)
     draw.rectangle((214, 10, 216, EPD_HEIGHT - 10), fill=0)
     draw.rectangle((422, 10, 424, EPD_HEIGHT - 10), fill=0)
-    draw.text((200, 20), "Test", font=font, fill=0)
     draw.text((20, 20), str(temp) + u" \u00B0" + "C", font=font, fill=0)
+
+    offset = 20
+    for cast in forecasts:
+        draw.text((220, offset), str(cast['main']['temp']) + u" \u00B0" + "C", font=font, fill=0)
+
+        if len(cast['weather']) > 0:
+
+            offset += 30
+            draw.text((220, offset), str(cast['weather'][0]['description']), font=font, fill=0)
+
+        offset += 30
+        draw.rectangle((214, offset, 422, offset + 2), fill=0)
+        offset += 15
 
     date = time.strftime("%d.%m.%Y")
     date = date + "\n" + time.strftime("%A")

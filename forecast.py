@@ -10,4 +10,10 @@ def get_current_weather():
 def get_forecast():
     response = requests.get('https://api.openweathermap.org/data/2.5/forecast?q=Innsbruck&units=metric&appid=2678fc5edec0fa22ba8f9d60b5085edc')
     # return only the next 3 forecasts
-    print(response.json()['list'].get(0))
+    forecasts = [
+        response.json()['list'][0],
+        response.json()['list'][1],
+        response.json()['list'][2]
+    ]
+
+    return forecasts
