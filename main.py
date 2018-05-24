@@ -28,16 +28,18 @@
 import Image
 import ImageDraw
 import ImageFont
+import ImageFilter
 import time
 import locale
-import forecast
+import weather_api
 
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
+ROW_COUNT = 3
+ROW_WIDTH = EPD_WIDTH / ROW_COUNT
+ROW_BORDER_WIDTH = 3
 
 
-# https://api.openweathermap.org/data/2.5/forecast?q=Innsbruck&units=metric&appid=2678fc5edec0fa22ba8f9d60b5085edc
-# https://api.openweathermap.org/data/2.5/weather?q=Innsbruck&units=metric&appid=2678fc5edec0fa22ba8f9d60b5085edc
 def main():
     # locale.setlocale(locale.LC_ALL, 'de_AT.utf8')
     draw_image()
@@ -46,23 +48,40 @@ def main():
 
     epd.display_frame(epd.get_frame_buffer(image))"""
 
-def draw_image():
-    temp = forecast.get_current_weather()
-    forecasts = forecast.get_forecast()
 
-    # For simplicity, the arguments are explicit numerical coordinates
+def draw_image():
+    weather = weather_api.get_current_weather()
+    forecasts = weather_api.get_forecast()
+
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)    # 1: clear the frame
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 24)
+    font_small = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 18)
 
+    draw.rectangle((0, 0, EPD_WIDTH, ROW_BORDER_WIDTH), fill=0)
+    draw.rectangle((0, EPD_HEIGHT - ROW_BORDER_WIDTH, EPD_WIDTH, EPD_HEIGHT), fill=0)
 
-    draw.rectangle((0, 0, EPD_WIDTH, EPD_HEIGHT), fill=0) # make it black
-    draw.rectangle((3, 3, EPD_WIDTH - 3, EPD_HEIGHT - 3), fill=255)
+    for x in range(1, ROW_COUNT + 1):
 
+        y_pos = ROW_WIDTH * (x - 1) - ROW_BORDER_WIDTH / 2
 
-    draw.rectangle((214, 10, 216, EPD_HEIGHT - 10), fill=0)
-    draw.rectangle((422, 10, 424, EPD_HEIGHT - 10), fill=0)
-    draw.text((20, 20), str(temp) + u" \u00B0" + "C", font=font, fill=0)
+        if x == 0:
+            y_pos += ROW_BORDER_WIDTH / 2
+
+        draw.rectangle((y_pos, 0, y_pos + ROW_BORDER_WIDTH, EPD_HEIGHT), fill=0)
+
+        y_pos = ROW_WIDTH * x - ROW_BORDER_WIDTH / 2
+
+        if x == ROW_COUNT:
+            y_pos -= ROW_BORDER_WIDTH / 2
+
+        draw.rectangle((y_pos, 0, y_pos + ROW_BORDER_WIDTH, EPD_HEIGHT), fill=0)
+
+    draw.text((20, 20), "outdoor", font=font, fill=0)
+    draw.text((20, 50), "tempature: " + str(weather['temp']) + u" \u00B0" + "C", font=font_small, fill=0)
+    print(weather)
+    draw.text((20, 80), "humidity: " + str(weather['humidity']) + "%", font=font_small, fill=0)
+    draw.text((20, 110), "pressure: " + str(weather['pressure']) + " hPa", font=font_small, fill=0)
 
     offset = 20
     for cast in forecasts:
@@ -74,17 +93,20 @@ def draw_image():
             draw.text((220, offset), str(cast['weather'][0]['description']), font=font, fill=0)
 
         offset += 30
-        draw.rectangle((214, offset, 422, offset + 2), fill=0)
+        draw.rectangle((214, offset, 427, offset + 3), fill=0)
         offset += 15
 
     date = time.strftime("%d.%m.%Y")
     date = date + "\n" + time.strftime("%A")
 
     draw.multiline_text((460, 20), date, font=font, fill=0, align="center")
+
     image.save("image.bmp", "BMP")
+
 
 def draw_forecast(draw):
     pass
+
 
 if __name__ == '__main__':
     main()
