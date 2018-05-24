@@ -25,13 +25,14 @@
  ##
 
 #import epd7in5
-import Image
-import ImageDraw
-import ImageFont
-import ImageFilter
 import time
 import locale
 import weather_api
+
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+from PIL import ImageFilter
 
 EPD_WIDTH = 640
 EPD_HEIGHT = 384
@@ -55,11 +56,16 @@ def draw_image():
 
     image = Image.new('1', (EPD_WIDTH, EPD_HEIGHT), 1)    # 1: clear the frame
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 24)
-    font_small = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf', 18)
+    font_big = ImageFont.truetype('Modum.ttf', 60)
+    font = ImageFont.truetype('Modum.ttf', 40)
+    font_small = ImageFont.truetype('Modum.ttf', 25)
 
     draw.rectangle((0, 0, EPD_WIDTH, ROW_BORDER_WIDTH), fill=0)
     draw.rectangle((0, EPD_HEIGHT - ROW_BORDER_WIDTH, EPD_WIDTH, EPD_HEIGHT), fill=0)
+
+    icon = Image.open('temperature.bmp', 'r')
+    image.resize((32, 32))
+    image.paste(icon, (20, 150))
 
     for x in range(1, ROW_COUNT + 1):
 
@@ -77,12 +83,12 @@ def draw_image():
 
         draw.rectangle((y_pos, 0, y_pos + ROW_BORDER_WIDTH, EPD_HEIGHT), fill=0)
 
-    draw.text((20, 20), "outdoor", font=font, fill=0)
-    draw.text((20, 50), "tempature: " + str(weather['temp']) + u" \u00B0" + "C", font=font_small, fill=0)
-    print(weather)
+    draw.text((25, -10), "outdoor", font=font_big, fill=0)
+    draw.text((20, 50), "tempature: " + str(weather['temp']) + "°C", font=font_small, fill=0)
     draw.text((20, 80), "humidity: " + str(weather['humidity']) + "%", font=font_small, fill=0)
     draw.text((20, 110), "pressure: " + str(weather['pressure']) + " hPa", font=font_small, fill=0)
 
+    """
     offset = 20
     for cast in forecasts:
         draw.text((220, offset), str(cast['main']['temp']) + u" \u00B0" + "C", font=font, fill=0)
@@ -95,7 +101,7 @@ def draw_image():
         offset += 30
         draw.rectangle((214, offset, 427, offset + 3), fill=0)
         offset += 15
-
+"""
     date = time.strftime("%d.%m.%Y")
     date = date + "\n" + time.strftime("%A")
 

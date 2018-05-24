@@ -1,0 +1,34 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="21">
+            <item index="0" class="java.lang.String" itemvalue="beautifulsoup4" />
+            <item index="1" class="java.lang.String" itemvalue="ipaddress" />
+            <item index="2" class="java.lang.String" itemvalue="html5lib" />
+            <item index="3" class="java.lang.String" itemvalue="cryptography" />
+            <item index="4" class="java.lang.String" itemvalue="pyserial" />
+            <item index="5" class="java.lang.String" itemvalue="numpy" />
+            <item index="6" class="java.lang.String" itemvalue="pyasn1" />
+            <item index="7" class="java.lang.String" itemvalue="SecretStorage" />
+            <item index="8" class="java.lang.String" itemvalue="pycrypto" />
+            <item index="9" class="java.lang.String" itemvalue="spidev" />
+            <item index="10" class="java.lang.String" itemvalue="chrome-gnome-shell" />
+            <item index="11" class="java.lang.String" itemvalue="pyOpenSSL" />
+            <item index="12" class="java.lang.String" itemvalue="lxml" />
+            <item index="13" class="java.lang.String" itemvalue="RPi.GPIO" />
+            <item index="14" class="java.lang.String" itemvalue="enum34" />
+            <item index="15" class="java.lang.String" itemvalue="keyring" />
+            <item index="16" class="java.lang.String" itemvalue="keyrings.alt" />
+            <item index="17" class="java.lang.String" itemvalue="webencodings" />
+            <item index="18" class="java.lang.String" itemvalue="idna" />
+            <item index="19" class="java.lang.String" itemvalue="Pillow" />
+            <item index="20" class="java.lang.String" itemvalue="scour" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
