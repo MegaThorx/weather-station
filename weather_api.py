@@ -7,7 +7,7 @@ location = 'Innsbruck'
 
 def get_current_weather():
     response = requests.get(base_url + 'weather?q=' + location + '&units=metric&appid=' + api_key)
-    return response.json()['main']
+    return response.json()
 
 
 def get_forecast():
